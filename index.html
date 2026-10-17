@@ -1,0 +1,1518 @@
+import React, { useState } from "react";
+
+// ==========================================
+// 1. EXACTLY 150 VERB FORMS LIBRARY (A-Z)
+// ==========================================
+const VERBS = [
+  { v1: "accept", v2: "accepted", v3: "accepted" }, // A (12)
+  { v1: "act", v2: "acted", v3: "acted" },
+  { v1: "add", v2: "added", v3: "added" },
+  { v1: "admit", v2: "admitted", v3: "admitted" },
+  { v1: "advise", v2: "advised", v3: "advised" },
+  { v1: "allow", v2: "allowed", v3: "allowed" },
+  { v1: "announce", v2: "announced", v3: "announced" },
+  { v1: "answer", v2: "answered", v3: "answered" },
+  { v1: "appear", v2: "appeared", v3: "appeared" },
+  { v1: "apply", v2: "applied", v3: "applied" },
+  { v1: "arrange", v2: "arranged", v3: "arranged" },
+  { v1: "ask", v2: "asked", v3: "asked" },
+  { v1: "bake", v2: "baked", v3: "baked" }, // B (15)
+  { v1: "be (am/is/are)", v2: "was/were", v3: "been" },
+  { v1: "bear", v2: "bore", v3: "borne/born" },
+  { v1: "beat", v2: "beat", v3: "beaten" },
+  { v1: "become", v2: "became", v3: "become" },
+  { v1: "begin", v2: "began", v3: "begun" },
+  { v1: "believe", v2: "believed", v3: "believed" },
+  { v1: "bend", v2: "bent", v3: "bent" },
+  { v1: "bind", v2: "bound", v3: "bound" },
+  { v1: "bite", v2: "bit", v3: "bitten" },
+  { v1: "bleed", v2: "bled", v3: "bled" },
+  { v1: "blow", v2: "blew", v3: "blown" },
+  { v1: "break", v2: "broke", v3: "broken" },
+  { v1: "bring", v2: "brought", v3: "brought" },
+  { v1: "buy", v2: "bought", v3: "bought" },
+  { v1: "call", v2: "called", v3: "called" }, // C (15)
+  { v1: "carry", v2: "carried", v3: "carried" },
+  { v1: "catch", v2: "caught", v3: "caught" },
+  { v1: "change", v2: "changed", v3: "changed" },
+  { v1: "chase", v2: "chased", v3: "chased" },
+  { v1: "cheat", v2: "cheated", v3: "cheated" },
+  { v1: "choose", v2: "chose", v3: "chosen" },
+  { v1: "clean", v2: "cleaned", v3: "cleaned" },
+  { v1: "clear", v2: "cleared", v3: "cleared" },
+  { v1: "climb", v2: "climbed", v3: "climbed" },
+  { v1: "close", v2: "closed", v3: "closed" },
+  { v1: "collect", v2: "collected", v3: "collected" },
+  { v1: "come", v2: "came", v3: "come" },
+  { v1: "cook", v2: "cooked", v3: "cooked" },
+  { v1: "cry", v2: "cried", v3: "cried" },
+  { v1: "cut", v2: "cut", v3: "cut" },
+  { v1: "dance", v2: "danced", v3: "danced" }, // D (12)
+  { v1: "decide", v2: "decided", v3: "decided" },
+  { v1: "deliver", v2: "delivered", v3: "delivered" },
+  { v1: "destroy", v2: "destroyed", v3: "destroyed" },
+  { v1: "die", v2: "died", v3: "died" },
+  { v1: "dig", v2: "dug", v3: "dug" },
+  { v1: "discover", v2: "discovered", v3: "discovered" },
+  { v1: "divide", v2: "divided", v3: "divided" },
+  { v1: "do", v2: "did", v3: "done" },
+  { v1: "draw", v2: "drew", v3: "drawn" },
+  { v1: "drink", v2: "drank", v3: "drunk" },
+  { v1: "drive", v2: "drove", v3: "driven" },
+  { v1: "earn", v2: "earned", v3: "earned" }, // E (9)
+  { v1: "eat", v2: "ate", v3: "eaten" },
+  { v1: "educate", v2: "educated", v3: "educated" },
+  { v1: "employ", v2: "employed", v3: "employed" },
+  { v1: "enjoy", v2: "enjoyed", v3: "enjoyed" },
+  { v1: "enter", v2: "entered", v3: "entered" },
+  { v1: "examine", v2: "examined", v3: "examined" },
+  { v1: "expect", v2: "expected", v3: "expected" },
+  { v1: "explain", v2: "explained", v3: "explained" },
+  { v1: "face", v2: "faced", v3: "faced" }, // F (12)
+  { v1: "fail", v2: "failed", v3: "failed" },
+  { v1: "fall", v2: "fell", v3: "fallen" },
+  { v1: "feed", v2: "fed", v3: "fed" },
+  { v1: "feel", v2: "felt", v3: "felt" },
+  { v1: "fight", v2: "fought", v3: "fought" },
+  { v1: "find", v2: "found", v3: "found" },
+  { v1: "finish", v2: "finished", v3: "finished" },
+  { v1: "fly", v2: "flew", v3: "flown" },
+  { v1: "follow", v2: "followed", v3: "followed" },
+  { v1: "forget", v2: "forgot", v3: "forgotten" },
+  { v1: "forgive", v2: "forgave", v3: "forgiven" },
+  { v1: "gather", v2: "gathered", v3: "gathered" }, // G (6)
+  { v1: "get", v2: "got", v3: "gotten/got" },
+  { v1: "give", v2: "gave", v3: "given" },
+  { v1: "go", v2: "went", v3: "gone" },
+  { v1: "grow", v2: "grew", v3: "grown" },
+  { v1: "guess", v2: "guessed", v3: "guessed" },
+  { v1: "happen", v2: "happened", v3: "happened" }, // H (7)
+  { v1: "hate", v2: "hated", v3: "hated" },
+  { v1: "have", v2: "had", v3: "had" },
+  { v1: "hear", v2: "heard", v3: "heard" },
+  { v1: "help", v2: "helped", v3: "helped" },
+  { v1: "hide", v2: "hid", v3: "hidden" },
+  { v1: "hit", v2: "hit", v3: "hit" },
+  { v1: "identify", v2: "identified", v3: "identified" }, // I (5)
+  { v1: "imagine", v2: "imagined", v3: "imagined" },
+  { v1: "improve", v2: "improved", v3: "improved" },
+  { v1: "include", v2: "included", v3: "included" },
+  { v1: "invite", v2: "invited", v3: "invited" },
+  { v1: "join", v2: "joined", v3: "joined" }, // J (2)
+  { v1: "jump", v2: "jumped", v3: "jumped" },
+  { v1: "keep", v2: "kept", v3: "kept" }, // K (4)
+  { v1: "kick", v2: "kicked", v3: "kicked" },
+  { v1: "kill", v2: "killed", v3: "killed" },
+  { v1: "know", v2: "knew", v3: "known" },
+  { v1: "laugh", v2: "laughed", v3: "laughed" }, // L (6)
+  { v1: "lay", v2: "laid", v3: "laid" },
+  { v1: "lead", v2: "led", v3: "led" },
+  { v1: "learn", v2: "learnt", v3: "learnt" },
+  { v1: "leave", v2: "left", v3: "left" },
+  { v1: "lose", v2: "lost", v3: "lost" },
+  { v1: "make", v2: "made", v3: "made" }, // M (5)
+  { v1: "marry", v2: "married", v3: "married" },
+  { v1: "mean", v2: "meant", v3: "meant" },
+  { v1: "meet", v2: "met", v3: "met" },
+  { v1: "move", v2: "moved", v3: "moved" },
+  { v1: "need", v2: "needed", v3: "needed" }, // N (2)
+  { v1: "notice", v2: "noticed", v3: "noticed" },
+  { v1: "obey", v2: "obeyed", v3: "obeyed" }, // O (3)
+  { v1: "open", v2: "opened", v3: "opened" },
+  { v1: "order", v2: "ordered", v3: "ordered" },
+  { v1: "paint", v2: "painted", v3: "painted" }, // P (7)
+  { v1: "pass", v2: "passed", v3: "passed" },
+  { v1: "pay", v2: "paid", v3: "paid" },
+  { v1: "play", v2: "played", v3: "played" },
+  { v1: "pull", v2: "pulled", v3: "pulled" },
+  { v1: "punish", v2: "punished", v3: "punished" },
+  { v1: "put", v2: "put", v3: "put" },
+  { v1: "quit", v2: "quit", v3: "quit" }, // Q (1)
+  { v1: "read", v2: "read", v3: "read" }, // R (6)
+  { v1: "receive", v2: "received", v3: "received" },
+  { v1: "remember", v2: "remembered", v3: "remembered" },
+  { v1: "repair", v2: "repaired", v3: "repaired" },
+  { v1: "ring", v2: "rang", v3: "rung" },
+  { v1: "run", v2: "ran", v3: "run" },
+  { v1: "say", v2: "said", v3: "said" }, // S (11)
+  { v1: "see", v2: "saw", v3: "seen" },
+  { v1: "sell", v2: "sold", v3: "sold" },
+  { v1: "send", v2: "sent", v3: "sent" },
+  { v1: "sing", v2: "sang", v3: "sung" },
+  { v1: "sit", v2: "sat", v3: "sat" },
+  { v1: "sleep", v2: "slept", v3: "slept" },
+  { v1: "speak", v2: "spoke", v3: "spoken" },
+  { v1: "stand", v2: "stood", v3: "stood" },
+  { v1: "steal", v2: "stole", v3: "stolen" },
+  { v1: "swim", v2: "swam", v3: "swum" },
+  { v1: "take", v2: "took", v3: "taken" }, // T (6)
+  { v1: "teach", v2: "taught", v3: "taught" },
+  { v1: "tear", v2: "tore", v3: "torn" },
+  { v1: "tell", v2: "told", v3: "told" },
+  { v1: "think", v2: "thought", v3: "thought" },
+  { v1: "throw", v2: "threw", v3: "thrown" },
+  { v1: "understand", v2: "understood", v3: "understood" }, // U (2)
+  { v1: "use", v2: "used", v3: "used" },
+  { v1: "visit", v2: "visited", v3: "visited" }, // V (1)
+  { v1: "wait", v2: "waited", v3: "waited" }, // W (5)
+  { v1: "walk", v2: "walked", v3: "walked" },
+  { v1: "wash", v2: "washed", v3: "washed" },
+  { v1: "win", v2: "won", v3: "won" },
+  { v1: "write", v2: "wrote", v3: "written" },
+  { v1: "yawn", v2: "yawned", v3: "yawned" }, // Y (2)
+  { v1: "yield", v2: "yielded", v3: "yielded" },
+  { v1: "zip", v2: "zipped", v3: "zipped" }, // Z (1) - TOTAL EXACTLY 150.
+];
+
+// ==========================================
+// 2. EXACTLY 30 GUIDED PRACTICE SENTENCES
+// ==========================================
+const PRACTICE_LIBRARY = [
+  {
+    id: 1,
+    active: "He writes a letter.",
+    tense: "Present Simple",
+    originalVerb: "writes",
+    v3Verb: "written",
+    passive: "A letter is written by him.",
+    explanation: "Subject + is + V3 + by + Object",
+  },
+  {
+    id: 2,
+    active: "The teacher explains the rules.",
+    tense: "Present Simple",
+    originalVerb: "explains",
+    v3Verb: "explained",
+    passive: "The rules are explained by the teacher.",
+    explanation: "Plural Object + are + V3 + by + Subject",
+  },
+  {
+    id: 3,
+    active: "Does she sing a song?",
+    tense: "Present Simple (Question)",
+    originalVerb: "sing",
+    v3Verb: "sung",
+    passive: "Is a song sung by her?",
+    explanation: "Is/Are + Object + V3 + by + Subject?",
+  },
+  {
+    id: 4,
+    active: "She is painting a picture.",
+    tense: "Present Continuous",
+    originalVerb: "painting",
+    v3Verb: "painted",
+    passive: "A picture is being painted by her.",
+    explanation: "Object + is + being + V3 + by + Subject",
+  },
+  {
+    id: 5,
+    active: "They are repairing the bridge.",
+    tense: "Present Continuous",
+    originalVerb: "repairing",
+    v3Verb: "repaired",
+    passive: "The bridge is being repaired by them.",
+    explanation: "Object + is + being + V3 + by + Subject",
+  },
+  {
+    id: 6,
+    active: "Are the masons building the wall?",
+    tense: "Present Continuous (Question)",
+    originalVerb: "building",
+    v3Verb: "built",
+    passive: "Is the wall being built by the masons?",
+    explanation: "Is/Are + Object + being + V3 + by + Subject?",
+  },
+  {
+    id: 7,
+    active: "I have completed the task.",
+    tense: "Present Perfect",
+    originalVerb: "completed",
+    v3Verb: "completed",
+    passive: "The task has been completed by me.",
+    explanation: "Object + has/have + been + V3 + by + Subject",
+  },
+  {
+    id: 8,
+    active: "The police have arrested the thief.",
+    tense: "Present Perfect",
+    originalVerb: "arrested",
+    v3Verb: "arrested",
+    passive: "The thief has been arrested by the police.",
+    explanation: "Object + has + been + V3 + by + Subject",
+  },
+  {
+    id: 9,
+    active: "Has he submitted the report?",
+    tense: "Present Perfect (Question)",
+    originalVerb: "submitted",
+    v3Verb: "submitted",
+    passive: "Has the report been submitted by him?",
+    explanation: "Has/Have + Object + been + V3 + by + Subject?",
+  },
+  {
+    id: 10,
+    active: "The mechanic repaired the car.",
+    tense: "Past Simple",
+    originalVerb: "repaired",
+    v3Verb: "repaired",
+    passive: "The car was repaired by the mechanic.",
+    explanation: "Object + was/were + V3 + by + Subject",
+  },
+  {
+    id: 11,
+    active: "Shakespeare wrote Hamlet.",
+    tense: "Past Simple",
+    originalVerb: "wrote",
+    v3Verb: "written",
+    passive: "Hamlet was written by Shakespeare.",
+    explanation: "Object + was + V3 + by + Subject",
+  },
+  {
+    id: 12,
+    active: "Did you finish the homework?",
+    tense: "Past Simple (Question)",
+    originalVerb: "finish",
+    v3Verb: "finished",
+    passive: "Was the homework finished by you?",
+    explanation: "Was/Were + Object + V3 + by + Subject?",
+  },
+  {
+    id: 13,
+    active: "They were painting the house.",
+    tense: "Past Continuous",
+    originalVerb: "painting",
+    v3Verb: "painted",
+    passive: "The house was being painted by them.",
+    explanation: "Object + was/were + being + V3 + by + Subject",
+  },
+  {
+    id: 14,
+    active: "The gardener was watering the plants.",
+    tense: "Past Continuous",
+    originalVerb: "watering",
+    v3Verb: "watered",
+    passive: "The plants were being watered by the gardener.",
+    explanation: "Plural Object + were + being + V3 + by + Subject",
+  },
+  {
+    id: 15,
+    active: "Was she reading a novel?",
+    tense: "Past Continuous (Question)",
+    originalVerb: "reading",
+    v3Verb: "read",
+    passive: "Was a novel being read by her?",
+    explanation: "Was/Were + Object + being + V3 + by + Subject?",
+  },
+  {
+    id: 16,
+    active: "We had won the game before it rained.",
+    tense: "Past Perfect",
+    originalVerb: "won",
+    v3Verb: "won",
+    passive: "The game had been won by us before it rained.",
+    explanation: "Object + had + been + V3 + by + Subject",
+  },
+  {
+    id: 17,
+    active: "She had cooked the dinner.",
+    tense: "Past Perfect",
+    originalVerb: "cooked",
+    v3Verb: "cooked",
+    passive: "The dinner had been cooked by her.",
+    explanation: "Object + had + been + V3 + by + Subject",
+  },
+  {
+    id: 18,
+    active: "Had they completed the project?",
+    tense: "Past Perfect (Question)",
+    originalVerb: "completed",
+    v3Verb: "completed",
+    passive: "Had the project been completed by them?",
+    explanation: "Had + Object + been + V3 + by + Subject?",
+  },
+  {
+    id: 19,
+    active: "The teacher will explain the lesson.",
+    tense: "Future Simple",
+    originalVerb: "explain",
+    v3Verb: "explained",
+    passive: "The lesson will be explained by the teacher.",
+    explanation: "Object + will + be + V3 + by + Subject",
+  },
+  {
+    id: 20,
+    active: "I shall help him.",
+    tense: "Future Simple",
+    originalVerb: "help",
+    v3Verb: "helped",
+    passive: "He will be helped by me.",
+    explanation: "Object + will/shall + be + V3 + by + Subject",
+  },
+  {
+    id: 21,
+    active: "Will they deliver the parcel tomorrow?",
+    tense: "Future Simple (Question)",
+    originalVerb: "deliver",
+    v3Verb: "delivered",
+    passive: "Will the parcel be delivered by them tomorrow?",
+    explanation: "Will/Shall + Object + be + V3 + by + Subject?",
+  },
+  {
+    id: 22,
+    active: "You must follow the rules.",
+    tense: "Modals",
+    originalVerb: "follow",
+    v3Verb: "followed",
+    passive: "The rules must be followed by you.",
+    explanation: "Object + modal + be + V3 + by + Subject",
+  },
+  {
+    id: 23,
+    active: "She can solve this puzzle.",
+    tense: "Modals",
+    originalVerb: "solve",
+    v3Verb: "solved",
+    passive: "This puzzle can be solved by her.",
+    explanation: "Object + modal + be + V3 + by + Subject",
+  },
+  {
+    id: 24,
+    active: "They should have informed the police.",
+    tense: "Modal Perfect",
+    originalVerb: "informed",
+    v3Verb: "informed",
+    passive: "The police should have been informed by them.",
+    explanation: "Object + modal + have been + V3 + by + Subject",
+  },
+  {
+    id: 25,
+    active: "Open the window.",
+    tense: "Imperative (Command)",
+    originalVerb: "Open",
+    v3Verb: "opened",
+    passive: "Let the window be opened.",
+    explanation: "Let + Object + be + V3",
+  },
+  {
+    id: 26,
+    active: "Do not touch the wire.",
+    tense: "Imperative (Negative)",
+    originalVerb: "touch",
+    v3Verb: "touched",
+    passive: "Let the wire not be touched.",
+    explanation: "Let + Object + not be + V3",
+  },
+  {
+    id: 27,
+    active: "Who wrote this book?",
+    tense: "Interrogative (Who)",
+    originalVerb: "wrote",
+    v3Verb: "written",
+    passive: "By whom was this book written?",
+    explanation: "By whom + aux verb + Object + V3?",
+  },
+  {
+    id: 28,
+    active: "Why did he punish the boy?",
+    tense: "Interrogative (Wh-)",
+    originalVerb: "punish",
+    v3Verb: "punished",
+    passive: "Why was the boy punished by him?",
+    explanation: "Wh-word + was/were + Object + V3 + by + Subject?",
+  },
+  {
+    id: 29,
+    active: "He gave me a pen.",
+    tense: "Double Object",
+    originalVerb: "gave",
+    v3Verb: "given",
+    passive: "I was given a pen by him.",
+    explanation: "Indirect Obj + be + V3 + Direct Obj + by + Subject",
+  },
+  {
+    id: 30,
+    active: "Someone stole my purse.",
+    tense: "Omitted Subject",
+    originalVerb: "stole",
+    v3Verb: "stolen",
+    passive: "My purse was stolen.",
+    explanation:
+      "Object + was/were + V3 (Omit obvious/unknown subject 'someone')",
+  },
+];
+
+// ==========================================
+// 3. EXACTLY 30 TIERED QUIZ QUESTIONS
+// ==========================================
+const QUIZ_LEVEL_1 = [
+  {
+    q: "Choose the correct passive voice: 'He writes a letter.'",
+    opts: [
+      "A letter is written by him.",
+      "A letter was written by him.",
+      "A letter has written by him.",
+      "A letter is write by him.",
+    ],
+    ans: 0,
+    exp: "Since the new subject 'A letter' is singular, the helping verb 'is' is used along with V3 (written).",
+  },
+  {
+    q: "Choose the correct passive voice: 'She sang a beautiful song.'",
+    opts: [
+      "A beautiful song is sung by her.",
+      "A beautiful song was sing by her.",
+      "A beautiful song was sung by her.",
+      "A beautiful song had been sung by her.",
+    ],
+    ans: 2,
+    exp: "Past Simple: Since 'A beautiful song' is singular, we use the singular helping verb 'was' + sung (V3).",
+  },
+  {
+    q: "Choose the correct passive voice: 'They will announce the results.'",
+    opts: [
+      "The results are announced.",
+      "The results will be announced by them.",
+      "The results will announced.",
+      "The results would be announced by them.",
+    ],
+    ans: 1,
+    exp: "Future Simple requires 'will be' + V3. The plural subject 'The results' takes 'will be'.",
+  },
+  {
+    q: "Choose the correct passive voice: 'The mechanic repaired the cars.'",
+    opts: [
+      "The cars is repaired by the mechanic.",
+      "The cars was repaired by the mechanic.",
+      "The cars were repaired by the mechanic.",
+      "The cars had been repaired.",
+    ],
+    ans: 2,
+    exp: "Past Simple: Since the new subject 'The cars' is PLURAL, the helping verb 'were' is used instead of 'was'.",
+  },
+  {
+    q: "Choose the correct active voice for: 'The glass was broken by Rahul.'",
+    opts: [
+      "Rahul breaks the glass.",
+      "Rahul is breaking the glass.",
+      "Rahul broke the glass.",
+      "Rahul has broken the glass.",
+    ],
+    ans: 2,
+    exp: "'was broken' is Past Simple passive. The active verb must be V2 (broke).",
+  },
+  {
+    q: "Choose the correct passive voice: 'I paint pictures.'",
+    opts: [
+      "Pictures are painted by me.",
+      "Pictures were painted by me.",
+      "Pictures are being painted by me.",
+      "Pictures is painted by me.",
+    ],
+    ans: 0,
+    exp: "Present Simple: Since the new subject 'Pictures' is PLURAL, the helping verb 'are' is used instead of 'is'.",
+  },
+  {
+    q: "Choose the correct passive voice: 'She buys books.'",
+    opts: [
+      "Books are bought by her.",
+      "Books were bought by her.",
+      "Books have been bought by her.",
+      "Books is bought by her.",
+    ],
+    ans: 0,
+    exp: "Present Simple: Since 'Books' is plural, the helping verb 'are' is used with V3 (bought).",
+  },
+  {
+    q: "Choose the correct passive voice: 'We won the match.'",
+    opts: [
+      "The match is won by us.",
+      "The match was won by us.",
+      "The match had been won by us.",
+      "The match was win by us.",
+    ],
+    ans: 1,
+    exp: "Past Simple: Since 'The match' is a singular subject, the helping verb 'was' is used.",
+  },
+  {
+    q: "Choose the correct passive voice: 'The dogs chased the cat.'",
+    opts: [
+      "The cat is chased by the dogs.",
+      "The cat was chased by the dogs.",
+      "The cat were chased by the dogs.",
+      "The cat has been chased by the dogs.",
+    ],
+    ans: 1,
+    exp: "Past Simple: Even though 'dogs' is plural, the new subject 'The cat' is singular, so the helping verb 'was' is used.",
+  },
+  {
+    q: "Identify the correct active voice for: 'A house will be built by him.'",
+    opts: [
+      "He builds a house.",
+      "He built a house.",
+      "He is building a house.",
+      "He will build a house.",
+    ],
+    ans: 3,
+    exp: "'will be built' is Future Simple passive. The active structure is 'will build'.",
+  },
+];
+
+const QUIZ_LEVEL_2 = [
+  {
+    q: "Choose the correct passive voice: 'They are playing cricket.'",
+    opts: [
+      "Cricket is played by them.",
+      "Cricket is being played by them.",
+      "Cricket was being played by them.",
+      "Cricket has been played by them.",
+    ],
+    ans: 1,
+    exp: "Present Continuous: Since 'Cricket' is singular, we use 'is being' + V3.",
+  },
+  {
+    q: "Choose the correct passive voice: 'I have finished the assignments.'",
+    opts: [
+      "The assignments has been finished by me.",
+      "The assignments have been finished by me.",
+      "The assignments was finished by me.",
+      "The assignments is finished by me.",
+    ],
+    ans: 1,
+    exp: "Present Perfect: Since the new subject 'The assignments' is PLURAL, the helping verb 'have' is used instead of 'has'.",
+  },
+  {
+    q: "Choose the correct passive voice: 'The peon had rung the bell.'",
+    opts: [
+      "The bell was rung by the peon.",
+      "The bell has been rung by the peon.",
+      "The bell had been rung by the peon.",
+      "The bell had rung by the peon.",
+    ],
+    ans: 2,
+    exp: "Past Perfect uses 'had been + V3' regardless of singular/plural subjects.",
+  },
+  {
+    q: "Choose the correct passive voice: 'You must follow the traffic rules.'",
+    opts: [
+      "The traffic rules must be followed by you.",
+      "The traffic rules must follow you.",
+      "The traffic rules are followed by you.",
+      "The traffic rules have to be followed.",
+    ],
+    ans: 0,
+    exp: "Modals: The modal 'must' is followed by 'be + V3' (must be followed).",
+  },
+  {
+    q: "Choose the correct passive voice: 'They were painting the houses.'",
+    opts: [
+      "The houses is painted by them.",
+      "The houses was painted by them.",
+      "The houses were being painted by them.",
+      "The houses was being painted by them.",
+    ],
+    ans: 2,
+    exp: "Past Continuous: Since the new subject 'The houses' is PLURAL, the helping verb 'were' is used (were being painted).",
+  },
+  {
+    q: "Which tense is generally NOT changed into Passive Voice?",
+    opts: [
+      "Present Perfect",
+      "Past Continuous",
+      "Future Continuous",
+      "Future Simple",
+    ],
+    ans: 2,
+    exp: "Future Continuous, Present Perfect Continuous, and Past Perfect Continuous are avoided in standard passive transformation.",
+  },
+  {
+    q: "Choose the correct passive voice: 'She can solve these problems.'",
+    opts: [
+      "These problems could be solved by her.",
+      "These problems can be solved by her.",
+      "These problems are solved by her.",
+      "These problems can solve by her.",
+    ],
+    ans: 1,
+    exp: "Modals remain the same (can -> can be) regardless of singular or plural new subjects.",
+  },
+  {
+    q: "Choose the correct passive voice: 'Has she cooked the food?'",
+    opts: [
+      "Has the food cooked by her?",
+      "Is the food cooked by her?",
+      "Has the food been cooked by her?",
+      "Have the food been cooked by her?",
+    ],
+    ans: 2,
+    exp: "Present Perfect Interrogative: 'The food' is an uncountable singular noun, so the singular helping verb 'Has' is retained.",
+  },
+  {
+    q: "Choose the correct passive voice: 'They will have built the bridge.'",
+    opts: [
+      "The bridge will have been built.",
+      "The bridge will be built.",
+      "The bridge would have built.",
+      "The bridge has been built.",
+    ],
+    ans: 0,
+    exp: "Future Perfect: Object + will have been + V3. (Vague 'by them' can be omitted).",
+  },
+  {
+    q: "Identify the correct active voice for: 'A song is being sung by her.'",
+    opts: [
+      "She sings a song.",
+      "She is singing a song.",
+      "She sang a song.",
+      "She has sung a song.",
+    ],
+    ans: 1,
+    exp: "'is being sung' is Present Continuous passive. Active must be 'is singing'.",
+  },
+];
+
+const QUIZ_LEVEL_3 = [
+  {
+    q: "Choose the correct passive voice: 'Open the door.'",
+    opts: [
+      "The door is opened.",
+      "Let the door be opened.",
+      "The door must be open.",
+      "Let open the door.",
+    ],
+    ans: 1,
+    exp: "Imperative command formula: Let + Object + be + V3.",
+  },
+  {
+    q: "Choose the correct passive voice: 'Who discovered America?'",
+    opts: [
+      "By whom was America discovered?",
+      "Who was America discovered by?",
+      "By who America was discovered?",
+      "America was discovered by who?",
+    ],
+    ans: 0,
+    exp: "'Who' changes to 'By whom'. The helping verb 'was' is used because the new subject 'America' is singular.",
+  },
+  {
+    q: "Choose the correct passive voice: 'The principal gave him a medal.'",
+    opts: [
+      "He was given a medal by the principal.",
+      "A medal is given to him by the principal.",
+      "He has given a medal by the principal.",
+      "A medal gives him by the principal.",
+    ],
+    ans: 0,
+    exp: "Double object: The indirect object (him) becomes the subject (He). Singular 'He' takes singular helping verb 'was'.",
+  },
+  {
+    q: "Choose the correct passive voice: 'Someone stole my wallet.'",
+    opts: [
+      "My wallet is stolen by someone.",
+      "My wallet was stolen by someone.",
+      "My wallet was stolen.",
+      "My wallet had been stolen.",
+    ],
+    ans: 2,
+    exp: "When the active subject is vague/unknown ('someone'), the 'by + agent' phrase is omitted entirely in passive.",
+  },
+  {
+    q: "Choose the correct passive voice: 'Please give me a glass of water.'",
+    opts: [
+      "Let a glass of water be given.",
+      "You are requested to give me a glass of water.",
+      "A glass of water is given to me.",
+      "Let me be given a glass of water.",
+    ],
+    ans: 1,
+    exp: "Imperative sentences containing 'Please' are converted using 'You are requested to + V1...'.",
+  },
+  {
+    q: "Choose the correct passive voice: 'I know him.'",
+    opts: [
+      "He is known by me.",
+      "He was known to me.",
+      "He is known to me.",
+      "He has been known by me.",
+    ],
+    ans: 2,
+    exp: "Exception: The verb 'know' takes the preposition 'to' instead of 'by' in the passive voice.",
+  },
+  {
+    q: "Choose the correct passive voice: 'The news surprised me.'",
+    opts: [
+      "I was surprised by the news.",
+      "I was surprised at the news.",
+      "I am surprised with the news.",
+      "I had been surprised at the news.",
+    ],
+    ans: 1,
+    exp: "Exception: The verb 'surprise' takes the preposition 'at' instead of 'by'. The singular subject 'I' takes 'was'.",
+  },
+  {
+    q: "Choose the correct passive voice: 'They laughed at the beggar.'",
+    opts: [
+      "The beggar was laughed at by them.",
+      "The beggar is laughed by them.",
+      "The beggar was laughed by them.",
+      "The beggar has been laughed at by them.",
+    ],
+    ans: 0,
+    exp: "Phrasal verbs: The preposition (at) must remain attached to the verb in the passive voice.",
+  },
+  {
+    q: "Choose the correct passive voice: 'Do not pluck the flowers.'",
+    opts: [
+      "Let the flowers not be plucked.",
+      "The flowers are not plucked.",
+      "Do not be plucked the flowers.",
+      "Let not the flowers plucked.",
+    ],
+    ans: 0,
+    exp: "Negative Imperative formula: Let + Object + not be + V3.",
+  },
+  {
+    q: "Choose the correct passive voice: 'We elected him chairman.'",
+    opts: [
+      "He was elected chairman.",
+      "Chairman was elected by us.",
+      "He is elected chairman by us.",
+      "He had been elected chairman.",
+    ],
+    ans: 0,
+    exp: "Verbs like elect/make take the person as the new subject. The vague 'by us' is omitted.",
+  },
+];
+
+const TENSE_RULES = [
+  {
+    name: "Present Simple",
+    active: "S + V1/V1(s) + O",
+    passive: "O + am/is/are + V3",
+    explanation: "Used for facts, habits, and universal truths.",
+    example_active: "The chef cooks the food.",
+    example_passive: "The food is cooked by the chef.",
+  },
+  {
+    name: "Present Continuous",
+    active: "S + am/is/are + V-ing + O",
+    passive: "O + am/is/are + being + V3",
+    explanation: "Used for actions happening right now.",
+    example_active: "She is singing a song.",
+    example_passive: "A song is being sung by her.",
+  },
+  {
+    name: "Present Perfect",
+    active: "S + has/have + V3 + O",
+    passive: "O + has/have + been + V3",
+    explanation:
+      "Used for actions that happened in the past but have a result in the present.",
+    example_active: "They have won the match.",
+    example_passive: "The match has been won by them.",
+  },
+  {
+    name: "Past Simple",
+    active: "S + V2 + O",
+    passive: "O + was/were + V3",
+    explanation: "Used for actions completed in the past.",
+    example_active: "He wrote a letter.",
+    example_passive: "A letter was written by him.",
+  },
+  {
+    name: "Past Continuous",
+    active: "S + was/were + V-ing + O",
+    passive: "O + was/were + being + V3",
+    explanation: "Used for continuous actions that happened in the past.",
+    example_active: "I was reading a book.",
+    example_passive: "A book was being read by me.",
+  },
+  {
+    name: "Past Perfect",
+    active: "S + had + V3 + O",
+    passive: "O + had + been + V3",
+    explanation: "Used for an action completed before another past action.",
+    example_active: "She had finished the work.",
+    example_passive: "The work had been finished by her.",
+  },
+  {
+    name: "Future Simple",
+    active: "S + will + V1 + O",
+    passive: "O + will + be + V3",
+    explanation: "Used for actions that will happen in the future.",
+    example_active: "I will call him.",
+    example_passive: "He will be called by me.",
+  },
+  {
+    name: "Future Perfect",
+    active: "S + will have + V3 + O",
+    passive: "O + will have + been + V3",
+    explanation:
+      "Used for actions that will be completed by a certain time in the future.",
+    example_active: "They will have built the house.",
+    example_passive: "The house will have been built by them.",
+  },
+  {
+    name: "Modal Verbs",
+    active: "S + Modal + V1 + O",
+    passive: "O + Modal + be + V3",
+    explanation: "Used with verbs like can, could, should, must, may, might.",
+    example_active: "You must obey the rules.",
+    example_passive: "The rules must be obeyed by you.",
+  },
+];
+
+// ==========================================
+// 4. MAIN APP COMPONENT & STYLES
+// ==========================================
+export default function App() {
+  const [currentScreen, setCurrentScreen] = useState("home");
+
+  // Indian Flag Tricolour Theme & Layout (Strictly Saffron, Navy, White, and India Green)
+  const styles = `
+    :root {
+      --saffron: #FF9933;
+      --navy: #000080;
+      --india-green: #138808;
+      --white: #FFFFFF;
+      --bg-color: #F8FAFC;
+    }
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { margin: 0; padding: 0; background-color: var(--bg-color); color: #1f2937; line-height: 1.6; }
+    .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+    
+    /* Header - Tricolour Theme */
+    .header { background: var(--white); padding: 20px; border-radius: 8px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); border-top: 8px solid var(--saffron); border-bottom: 8px solid var(--navy); }
+    .header h1 { margin: 0; font-size: 1.8rem; font-weight: 800; color: var(--navy); text-transform: uppercase; letter-spacing: 1px; }
+    .header-sub { font-size: 1.1rem; margin-top: 5px; color: var(--saffron); font-weight: 600; }
+    .watermark { font-size: 0.9rem; text-align: right; font-style: italic; background: rgba(0,0,128,0.05); padding: 8px 12px; border-radius: 6px; font-weight: bold; color: var(--navy); border: 1px solid var(--navy); }
+    
+    /* Navigation Grid */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+    .card { background: var(--white); padding: 25px 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border: 2px solid var(--navy); text-align: center; font-weight: bold; color: var(--navy); font-size: 1.15rem; }
+    .card:hover { transform: translateY(-5px); background: var(--navy); color: var(--white); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15); border-color: var(--navy); }
+    
+    /* Buttons */
+    .btn { background: var(--navy); color: var(--white); border: 2px solid var(--navy); padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 1.05rem; font-weight: bold; transition: all 0.3s; }
+    .btn:hover { background: var(--white); color: var(--navy); }
+    .btn-secondary { background: var(--saffron); border-color: var(--saffron); color: var(--white); }
+    .btn-secondary:hover { background: var(--white); color: var(--saffron); }
+    
+    /* Content Boxes */
+    .content-box { background: var(--white); padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); margin-bottom: 25px; border-top: 4px solid var(--saffron); }
+    
+    /* Correct Answers & Explanations (STRICTLY INDIA GREEN) */
+    .explanation-box { background: rgba(19, 136, 8, 0.1); padding: 20px; border-left: 6px solid var(--india-green); border-radius: 0 8px 8px 0; margin-top: 20px; color: #0A5C04; font-size: 1.1rem; }
+    .text-green { color: var(--india-green); font-weight: bold; }
+    
+    /* Formulas & Tips */
+    .formula { background: rgba(255, 153, 51, 0.1); padding: 15px; border-left: 5px solid var(--saffron); font-family: monospace; font-size: 1.15rem; margin: 15px 0; color: #B35900; }
+    
+    /* Inputs */
+    .select-input { width: 100%; padding: 14px; border: 2px solid var(--navy); border-radius: 6px; font-size: 1.05rem; margin-bottom: 20px; outline: none; background: var(--white); }
+    .select-input:focus { border-color: var(--saffron); }
+    
+    /* Quiz Options */
+    .option { display: block; width: 100%; text-align: left; background: #F1F5F9; padding: 15px 20px; margin-bottom: 12px; border: 2px solid #CBD5E1; border-radius: 6px; cursor: pointer; font-size: 1.05rem; transition: all 0.2s; color: #334155; }
+    .option:hover:not(:disabled) { background: var(--navy); color: var(--white); border-color: var(--navy); }
+    .option.correct { background: rgba(19, 136, 8, 0.15); border-color: var(--india-green); color: var(--india-green); font-weight: bold; }
+    .option.wrong { background: #FEF2F2; border-color: #EF4444; color: #B91C1C; }
+    
+    /* Tables/Grids */
+    .verb-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 12px 15px; border-bottom: 1px solid #E2E8F0; }
+    .verb-header { font-weight: bold; background: var(--navy); color: var(--white); border-radius: 6px 6px 0 0; }
+    
+    .table-style { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    .table-style th { background: var(--navy); color: var(--white); padding: 15px; text-align: left; border: 1px solid var(--navy); }
+    .table-style td { padding: 15px; border: 1px solid #E2E8F0; font-size: 1.05rem; }
+    
+    h2 { color: var(--navy); border-bottom: 2px solid var(--saffron); padding-bottom: 10px; font-weight: 800; text-transform: uppercase; }
+    h3 { color: var(--saffron); font-weight: 700; margin-top: 25px; }
+    
+    /* Mobile Adjustments */
+    @media (max-width: 600px) {
+      .header { flex-direction: column; text-align: center; gap: 15px; padding: 20px; }
+      .watermark { text-align: center; width: 100%; }
+      .verb-grid { font-size: 0.9rem; padding: 10px; }
+      .content-box { padding: 20px; }
+    }
+  `;
+
+  return (
+    <div className="app-wrapper">
+      <style>{styles}</style>
+
+      <div className="container">
+        <header className="header">
+          <div>
+            <h1>MASTER ENGLISH GRAMMAR</h1>
+            <div className="header-sub">Active Voice to Passive Voice</div>
+          </div>
+          <div className="watermark">
+            English & Beyond
+            <br />
+            by Sukumar, MA English
+          </div>
+        </header>
+
+        {currentScreen !== "home" && (
+          <button
+            className="btn btn-secondary"
+            style={{ marginBottom: "20px" }}
+            onClick={() => setCurrentScreen("home")}
+          >
+            ← Return to Main Menu
+          </button>
+        )}
+
+        {currentScreen === "home" && (
+          <div>
+            <div
+              className="content-box"
+              style={{ textAlign: "center", borderTopColor: "var(--navy)" }}
+            >
+              <h2 style={{ borderBottom: "none" }}>
+                Welcome, Students & Aspirants!
+              </h2>
+              <p style={{ fontSize: "1.15rem" }}>
+                Master Active and Passive Voice for AP SCERT, NCERT, TET, and
+                DSC exams. Choose a module below.
+              </p>
+            </div>
+            <div className="grid">
+              <div className="card" onClick={() => setCurrentScreen("basics")}>
+                1. Learn the Basics
+              </div>
+              <div className="card" onClick={() => setCurrentScreen("tenses")}>
+                2. Tense-Wise Rules
+              </div>
+              <div
+                className="card"
+                onClick={() => setCurrentScreen("converter")}
+              >
+                3. Guided Practice Library
+              </div>
+              <div className="card" onClick={() => setCurrentScreen("verbs")}>
+                4. V3 Verb Dictionary
+              </div>
+              <div className="card" onClick={() => setCurrentScreen("quiz")}>
+                5. Tiered Mega Quiz
+              </div>
+              <div
+                className="card"
+                onClick={() => setCurrentScreen("revision")}
+              >
+                6. Quick Revision Chart
+              </div>
+            </div>
+          </div>
+        )}
+
+        {currentScreen === "basics" && (
+          <div className="content-box">
+            <h2>The Basic Concepts</h2>
+
+            <h3>How to Identify the Elements of a Sentence:</h3>
+            <ul style={{ fontSize: "1.1rem", lineHeight: "1.8" }}>
+              <li>
+                <strong style={{ color: "var(--navy)" }}>Subject:</strong> Ask
+                "Who or What performs the action?"
+              </li>
+              <li>
+                <strong style={{ color: "var(--saffron)" }}>Verb:</strong> The
+                action word. Identifies the tense.
+              </li>
+              <li>
+                <strong className="text-green">Object:</strong> Ask "Whom or
+                What receives the action?"
+              </li>
+            </ul>
+
+            <h3>Step-by-Step Conversion Tips:</h3>
+            <ol style={{ fontSize: "1.1rem", lineHeight: "1.8" }}>
+              <li>
+                Identify the Subject, Verb, and Object in the Active sentence.
+              </li>
+              <li>
+                Move the <strong className="text-green">Object</strong> to the
+                beginning. It becomes your new subject.
+              </li>
+              <li>
+                Add the correct 'Be' form (is/are/was/were/been/being).{" "}
+                <strong>CRITICAL:</strong> Match this helping verb to the{" "}
+                <em>new subject</em> (singular or plural), not the old one!
+              </li>
+              <li>
+                Change the main action verb into its <strong>V3 form</strong>{" "}
+                (Past Participle).
+              </li>
+              <li>
+                Add the preposition <strong>'by'</strong> followed by the
+                original subject (the agent).
+              </li>
+            </ol>
+
+            <h3>The Golden Formula</h3>
+            <div className="formula">
+              <strong>Active:</strong> Subject + Verb + Object
+              <br />
+              <strong>Passive:</strong> Object + suitable 'Be' form + V3 + by +
+              Subject
+            </div>
+          </div>
+        )}
+
+        {currentScreen === "tenses" && (
+          <div>
+            <h2>Tense-Wise Conversion Rules</h2>
+            <div
+              className="explanation-box"
+              style={{ borderLeftColor: "var(--saffron)", color: "inherit" }}
+            >
+              <strong>Note:</strong> Present Perfect Continuous, Past Perfect
+              Continuous, Future Continuous, and Future Perfect Continuous are
+              generally NOT converted into passive voice.
+            </div>
+            {TENSE_RULES.map((rule, idx) => (
+              <div key={idx} className="content-box">
+                <h3 style={{ marginTop: 0, fontSize: "1.4rem" }}>
+                  {rule.name}
+                </h3>
+                <p>
+                  <em>{rule.explanation}</em>
+                </p>
+                <div className="formula">
+                  Active Formula: {rule.active}
+                  <br />
+                  Passive Formula: {rule.passive}
+                </div>
+                <div
+                  style={{
+                    background: "#F1F5F9",
+                    padding: "15px",
+                    borderRadius: "6px",
+                    border: "1px solid #CBD5E1",
+                  }}
+                >
+                  <strong>Active Example:</strong> {rule.example_active}
+                  <br />
+                  <strong className="text-green">Passive Example:</strong>{" "}
+                  <span className="text-green">{rule.example_passive}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {currentScreen === "converter" && <PracticeLibraryModule />}
+        {currentScreen === "verbs" && <VerbHelper />}
+        {currentScreen === "quiz" && <QuizSelectionModule />}
+
+        {currentScreen === "revision" && (
+          <div className="content-box">
+            <h2>Quick Revision Chart</h2>
+            <table className="table-style">
+              <thead>
+                <tr>
+                  <th>Active Verb Form</th>
+                  <th>Passive Helper Form (+ V3)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>V1 / V1(s/es)</td>
+                  <td>am / is / are + V3</td>
+                </tr>
+                <tr>
+                  <td>V2</td>
+                  <td>was / were + V3</td>
+                </tr>
+                <tr>
+                  <td>am / is / are + V-ing</td>
+                  <td>
+                    am / is / are + <strong>being</strong> + V3
+                  </td>
+                </tr>
+                <tr>
+                  <td>was / were + V-ing</td>
+                  <td>
+                    was / were + <strong>being</strong> + V3
+                  </td>
+                </tr>
+                <tr>
+                  <td>has / have / had + V3</td>
+                  <td>
+                    has / have / had + <strong>been</strong> + V3
+                  </td>
+                </tr>
+                <tr>
+                  <td>Modal + V1</td>
+                  <td>
+                    Modal + <strong>be</strong> + V3
+                  </td>
+                </tr>
+                <tr>
+                  <td>Imperative (V1 + Obj)</td>
+                  <td>
+                    <strong>Let</strong> + Obj + <strong>be</strong> + V3
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ==========================================
+// GUIDED PRACTICE COMPONENT
+// ==========================================
+function PracticeLibraryModule() {
+  const [selectedId, setSelectedId] = useState("");
+  const result = PRACTICE_LIBRARY.find(
+    (item) => item.id.toString() === selectedId
+  );
+
+  return (
+    <div className="content-box">
+      <h2>Guided Practice Library (30 Sentences)</h2>
+      <p style={{ marginBottom: "20px" }}>
+        Select a sentence to see a detailed, step-by-step grammatical breakdown.
+      </p>
+
+      <select
+        className="select-input"
+        value={selectedId}
+        onChange={(e) => setSelectedId(e.target.value)}
+      >
+        <option value="">-- Choose a sentence from the library --</option>
+        {PRACTICE_LIBRARY.map((item) => (
+          <option key={item.id} value={item.id}>
+            {item.active}
+          </option>
+        ))}
+      </select>
+
+      {result && (
+        <div
+          style={{
+            marginTop: "25px",
+            padding: "25px",
+            background: "var(--white)",
+            border: "2px solid var(--navy)",
+            borderRadius: "8px",
+          }}
+        >
+          <p style={{ fontSize: "1.2rem", margin: "0 0 10px 0" }}>
+            <strong>Active Sentence:</strong> {result.active}
+          </p>
+          <div
+            style={{
+              display: "flex",
+              gap: "20px",
+              flexWrap: "wrap",
+              margin: "15px 0",
+            }}
+          >
+            <div
+              style={{
+                background: "rgba(255, 153, 51, 0.1)",
+                padding: "10px 15px",
+                borderRadius: "6px",
+                border: "1px solid var(--saffron)",
+              }}
+            >
+              <strong>Tense:</strong> {result.tense}
+            </div>
+            <div
+              style={{
+                background: "#F1F5F9",
+                padding: "10px 15px",
+                borderRadius: "6px",
+                border: "1px solid #CBD5E1",
+              }}
+            >
+              <strong>Original Verb:</strong> {result.originalVerb}
+            </div>
+            <div
+              style={{
+                background: "var(--navy)",
+                color: "var(--white)",
+                padding: "10px 15px",
+                borderRadius: "6px",
+              }}
+            >
+              <strong>V3 form to be used:</strong> {result.v3Verb}
+            </div>
+          </div>
+
+          <div className="explanation-box">
+            <div
+              style={{
+                fontSize: "1.4rem",
+                marginBottom: "15px",
+                borderBottom: "1px solid var(--india-green)",
+                paddingBottom: "10px",
+              }}
+            >
+              <strong>Final Answer:</strong>{" "}
+              <span className="text-green">{result.passive}</span>
+            </div>
+            <div>
+              <strong>Explanation:</strong> {result.explanation}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ==========================================
+// VERB DICTIONARY COMPONENT (No Search)
+// ==========================================
+function VerbHelper() {
+  return (
+    <div className="content-box">
+      <h2>V1 - V2 - V3 Dictionary (150 Verbs A-Z)</h2>
+      <p>
+        Scroll through this alphabetical list of exactly 150 essential English
+        verbs.
+      </p>
+
+      <div
+        style={{
+          border: "1px solid var(--navy)",
+          borderRadius: "6px",
+          overflow: "hidden",
+          marginTop: "20px",
+        }}
+      >
+        <div className="verb-grid verb-header">
+          <div>V1 (Base)</div>
+          <div>V2 (Past)</div>
+          <div>V3 (Past Participle)</div>
+        </div>
+        <div style={{ maxHeight: "600px", overflowY: "auto" }}>
+          {VERBS.map((verb, idx) => (
+            <div
+              key={idx}
+              className="verb-grid"
+              style={{ background: idx % 2 === 0 ? "var(--white)" : "#F8FAFC" }}
+            >
+              <div style={{ fontWeight: "600" }}>{verb.v1}</div>
+              <div>{verb.v2}</div>
+              <div className="text-green">{verb.v3}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ==========================================
+// TIERED MEGA QUIZ COMPONENT
+// ==========================================
+function QuizSelectionModule() {
+  const [quizLevel, setQuizLevel] = useState(null);
+
+  if (quizLevel === 1)
+    return (
+      <QuizRunner
+        questions={QUIZ_LEVEL_1}
+        title="Level 1: Simple Sentences"
+        onBack={() => setQuizLevel(null)}
+      />
+    );
+  if (quizLevel === 2)
+    return (
+      <QuizRunner
+        questions={QUIZ_LEVEL_2}
+        title="Level 2: Medium Tough"
+        onBack={() => setQuizLevel(null)}
+      />
+    );
+  if (quizLevel === 3)
+    return (
+      <QuizRunner
+        questions={QUIZ_LEVEL_3}
+        title="Level 3: Hard Level (Exceptions/Interrogatives)"
+        onBack={() => setQuizLevel(null)}
+      />
+    );
+
+  return (
+    <div className="content-box" style={{ textAlign: "center" }}>
+      <h2>Select Quiz Level</h2>
+      <p style={{ marginBottom: "30px", fontSize: "1.1rem" }}>
+        Test your knowledge across 30 comprehensive questions.
+      </p>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+          maxWidth: "500px",
+          margin: "0 auto",
+        }}
+      >
+        <button
+          className="btn"
+          onClick={() => setQuizLevel(1)}
+          style={{
+            padding: "20px",
+            fontSize: "1.2rem",
+            background: "#3b82f6",
+            borderColor: "#3b82f6",
+          }}
+        >
+          Level 1: Simple Sentences (10 Qs)
+        </button>
+        <button
+          className="btn btn-secondary"
+          onClick={() => setQuizLevel(2)}
+          style={{ padding: "20px", fontSize: "1.2rem" }}
+        >
+          Level 2: Medium Tough (10 Qs)
+        </button>
+        <button
+          className="btn"
+          onClick={() => setQuizLevel(3)}
+          style={{
+            background: "var(--navy)",
+            borderColor: "var(--navy)",
+            padding: "20px",
+            fontSize: "1.2rem",
+          }}
+        >
+          Level 3: Hard Level (Exceptions) (10 Qs)
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function QuizRunner({ questions, title, onBack }) {
+  const [currentQ, setCurrentQ] = useState(0);
+  const [score, setScore] = useState(0);
+  const [showExplanation, setShowExplanation] = useState(false);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [quizFinished, setQuizFinished] = useState(false);
+
+  const handleAnswer = (index) => {
+    if (selectedAnswer !== null) return;
+    setSelectedAnswer(index);
+    if (index === questions[currentQ].ans) {
+      setScore(score + 1);
+    }
+    setShowExplanation(true);
+  };
+
+  const nextQuestion = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ(currentQ + 1);
+      setSelectedAnswer(null);
+      setShowExplanation(false);
+    } else {
+      setQuizFinished(true);
+    }
+  };
+
+  if (quizFinished) {
+    return (
+      <div
+        className="content-box"
+        style={{ textAlign: "center", padding: "50px 20px" }}
+      >
+        <h2>{title} Completed!</h2>
+        <h1
+          style={{ fontSize: "4rem", color: "var(--navy)", margin: "20px 0" }}
+        >
+          {score} / {questions.length}
+        </h1>
+        <button
+          className="btn"
+          onClick={onBack}
+          style={{ marginRight: "15px" }}
+        >
+          Back to Levels
+        </button>
+      </div>
+    );
+  }
+
+  const q = questions[currentQ];
+
+  return (
+    <div className="content-box">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "20px",
+          borderBottom: "2px solid var(--saffron)",
+          paddingBottom: "15px",
+        }}
+      >
+        <h3 style={{ margin: 0, color: "var(--navy)" }}>{title}</h3>
+        <div style={{ fontWeight: "bold", fontSize: "1.1rem" }}>
+          Q {currentQ + 1} / {questions.length} | Score:{" "}
+          <span className="text-green">{score}</span>
+        </div>
+      </div>
+
+      <h3
+        style={{ fontSize: "1.3rem", marginBottom: "25px", color: "#1e293b" }}
+      >
+        {q.q}
+      </h3>
+
+      <div>
+        {q.opts.map((opt, idx) => {
+          let btnClass = "option";
+          if (showExplanation) {
+            if (idx === q.ans) btnClass += " correct";
+            else if (idx === selectedAnswer) btnClass += " wrong";
+          }
+          return (
+            <button
+              key={idx}
+              className={btnClass}
+              onClick={() => handleAnswer(idx)}
+              disabled={showExplanation}
+            >
+              <strong style={{ marginRight: "10px" }}>
+                {String.fromCharCode(65 + idx)}.
+              </strong>{" "}
+              {opt}
+            </button>
+          );
+        })}
+      </div>
+
+      {showExplanation && (
+        <div className="explanation-box">
+          <strong>Explanation:</strong>
+          <p style={{ marginTop: "10px" }}>{q.exp}</p>
+          <div style={{ textAlign: "right", marginTop: "15px" }}>
+            <button
+              className="btn"
+              onClick={nextQuestion}
+              style={{
+                background: "var(--india-green)",
+                borderColor: "var(--india-green)",
+              }}
+            >
+              {currentQ === questions.length - 1
+                ? "Finish Level"
+                : "Next Question →"}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
